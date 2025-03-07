@@ -1,6 +1,6 @@
-const Mongoose = require("mongoose");
+const mongoose = require("mongoose");
 
-const DataSchema = Mongoose.Schema(
+const DataSchema = mongoose.Schema(
   {
     title: {
       type: String,
@@ -16,7 +16,7 @@ const DataSchema = Mongoose.Schema(
     },
     createdAt: {
       type: Date,
-      default: Date.now,
+      default: Date.now(),
     },
   },
   {

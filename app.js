@@ -17,14 +17,13 @@ const xss = require("xss-clean");
 const mongoose = require("mongoose");
 
 //connect to mongodb
-let URI =
-  "mongodb+srv://parvez:parvez122509@universal-database.8e02k.mongodb.net/taskManager";
-let OPTION = { autoIndex: true };
 
-mongoose.connect(URI, OPTION, (err) => {
-  if (err) console.log(err);
-  else console.log("Database connected successfully");
-});
+mongoose
+  .connect(
+    "mongodb+srv://parvez:parvez122509@universal-database.8e02k.mongodb.net/taskManager"
+  )
+  .then(() => console.log("Connected to the database"))
+  .catch((err) => console.error("Error connecting to the database:", err));
 
 //security middleware implement
 app.use(cors());
@@ -33,13 +32,16 @@ app.use(xss());
 app.use(hpp());
 app.use(ExpressMongoSanitize());
 
-//body parser implement
-app.use(bodyParser.json());
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
+//body parser implement
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 //rate limiter middleware
 
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
+  windowMs: 24 * 60 * 1000, // 15 minutes
   max: 100, // limit each IP to 100 requests per windowMs
 });
 
