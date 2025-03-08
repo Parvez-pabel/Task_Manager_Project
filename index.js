@@ -2,7 +2,7 @@
 const app = require("./app");
 
 // defining port
-const PORT = 5000;
+const PORT = process.env.PORT || 8080
 
 // starting the server
 
