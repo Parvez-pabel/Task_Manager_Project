@@ -2,14 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "parvez-alom-task-mg-project-backend/index.js",
+      "src": "index.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "parvez-alom-task-mg-project-backend/index.js"
+      "dest": "index.js"
     }
   ]
 }
