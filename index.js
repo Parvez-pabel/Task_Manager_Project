@@ -1,5 +1,5 @@
 // making server
-const app = require("./parvez-alom-task-mg-project-backend/app");
+const app = require("./app");
 
 // defining port
 const PORT = process.env.PORT || 8080;

@@ -1,7 +1,7 @@
 //Basic library import
 
 const express = require("express");
-const router = require("./parvez-alom-task-mg-project-backend/src/routes/api");
+const router = require("./src/routes/api");
 const app = new express();
 const bodyParser = require("body-parser");
 
