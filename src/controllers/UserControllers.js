@@ -4,15 +4,17 @@ const UserModel = require("../models/UserModel");
 
 exports.registration = async (req, res) => {
   try {
-    let reqBody = req.body;
-    const newUser = await UserModel.create(reqBody);
-    res
-      .status(200)
-      .json({ message: "User registered successfully", user: newUser });
+    if (err) {
+      let reqBody = req.body;
+      const newUser = await UserModel.create(reqBody);
+      res
+        .status(200)
+        .json({ message: "User registered successfully", user: newUser });
+    } else {
+      return res.status(200).json({ message: "User already exists" });
+    }
   } catch (error) {
-    res
-      .status(200)
-      .json({ message: "Error registering user", error: error.message });
+    res.status(400).json({ message: "Error registering user", error: error });
   }
 };
 //login
