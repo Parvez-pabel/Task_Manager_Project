@@ -7,11 +7,11 @@ exports.registration = async (req, res) => {
     let reqBody = req.body;
     const newUser = await UserModel.create(reqBody);
     res
-      .status(201)
+      .status(200)
       .json({ message: "User registered successfully", user: newUser });
   } catch (error) {
     res
-      .status(500)
+      .status(200)
       .json({ message: "Error registering user", error: error.message });
   }
 };
