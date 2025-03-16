@@ -2,15 +2,15 @@
 const jwt = require("jsonwebtoken");
 const UserModel = require("../models/UserModel");
 
-exports.registration = async (req, res) => {
-  try {
-    const reqBody = req.body;
-    const newUser = await UserModel.create(reqBody); // Await for user creation
-
-    return res.status(200).json({ message: "success", user: newUser });
-  } catch (err) {
-    return res.status(400).json({ message: "fail", error: err.message });
-  }
+exports.registration = (req, res) => {
+  const reqBody = req.body;
+  UserModel.create(reqBody, (err, data) => {
+    if (err) {
+      return res.status(400).json({ message: "fail", data: err });
+    } else {
+      return res.status(200).json({ message: "success", data: data });
+    }
+  }); // Await for user creation
 };
 
 //login
