@@ -4,31 +4,23 @@ const UserModel = require("../models/UserModel");
 
 exports.registration = async (req, res) => {
   try {
-    const reqBody = req.body;
+    console.log("Received Request Body:", req.body); // Log request body
 
-    // Ensure required fields are present
-    if (
-      !reqBody.email ||
-      !reqBody.password ||
-      !reqBody.firstName ||
-      !reqBody.lastName
-    ) {
+    const { email, password, firstName, lastName } = req.body;
+
+    if (!email || !password || !firstName || !lastName) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    // Check if the user already exists (assuming email must be unique)
-    const existingUser = await UserModel.findOne({ email: reqBody.email });
+    const existingUser = await UserModel.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "Email already in use" });
     }
 
-    // Create a new user
-    const newUser = await UserModel.create(reqBody);
-
-    res.status(201).json({
-      message: "User registered successfully",
-      user: newUser,
-    });
+    const newUser = await UserModel.create(req.body);
+    res
+      .status(200)
+      .json({ message: "User registered successfully", user: newUser });
   } catch (error) {
     console.error("Registration Error:", error);
     res
