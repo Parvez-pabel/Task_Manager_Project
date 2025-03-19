@@ -88,30 +88,63 @@ exports.getAllTasks = async (req, res) => {
 
 //task select by status
 
+// exports.getTaskByStatus = async (req, res) => {
+//   try {
+//     let email = req.headers.email;
+//     let status = req.params.status;
+//     let Query = { email: email, status: status };
+//     const tasks = await TaskModel.find(Query);
+//     //change the date format
+//     const formattedTasks = tasks.map((task) => ({
+//       ...task._doc, // Spread existing document fields
+//       createdAt: new Date(task.createdAt).toLocaleDateString("en-US", {
+//         weekday: "long",
+//         year: "numeric",
+//         month: "long",
+//         day: "numeric",
+//       }), // Format date
+//     }));
+
+//     res.status(200).json({ message: "Tasks by status", tasks: formattedTasks });
+//   } catch (error) {
+//     res
+//       .status(500)
+//       .json({ message: "Error getting tasks by status", error: error.message });
+//   }
+// };
 exports.getTaskByStatus = async (req, res) => {
   try {
     let email = req.headers.email;
     let status = req.params.status;
+
+    console.log("Fetching tasks for email:", email, "with status:", status);
+
     let Query = { email: email, status: status };
-    const tasks = await TaskModel.find(Query);
-    //change the date format
+    const tasks = await TaskModel.find(Query).lean(); // Ensure plain JSON
+
+    console.log("Total Tasks Found:", tasks.length);
+
+    // Format the createdAt date
     const formattedTasks = tasks.map((task) => ({
-      ...task._doc, // Spread existing document fields
+      ...task,
       createdAt: new Date(task.createdAt).toLocaleDateString("en-US", {
         weekday: "long",
         year: "numeric",
         month: "long",
         day: "numeric",
-      }), // Format date
+      }),
     }));
 
     res.status(200).json({ message: "Tasks by status", tasks: formattedTasks });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error getting tasks by status", error: error.message });
+    console.error("Error fetching tasks:", error);
+    res.status(500).json({
+      message: "Error getting tasks by status",
+      error: error.message,
+    });
   }
 };
+
 // Task count by status & total task
 
 exports.countTasksByStatus = async (req, res) => {
