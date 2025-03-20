@@ -147,29 +147,19 @@ exports.getTaskByStatus = async (req, res) => {
 
 // Task count by status & total task
 
-exports.countTasksByStatus = async (req, res) => {
-  try {
-    let email = req.headers.email;
-    let Query = { email: email };
-    const tasks = await TaskModel.find(Query);
-    const totalTasks = tasks.length; //tasks.length দিয়ে মোট কতগুলো টাস্ক আছে তা বের করা হয়েছে।  
-    const statusCounts = tasks.reduce((acc, task) => {
-      acc[task.status] = (acc[task.status] || 0) + 1; //acc হলো Accumulator (একটি ফাঁকা অবজেক্ট {} শুরুতে) task.status মান অনুযায়ী কাউন্ট ইনক্রিমেন্ট করা হচ্ছে।
-      //যদি acc[task.status] আগে না থাকে, তাহলে এটি 0 ধরা হবে, তারপর +1 যোগ হবে। যদি এটি আগে থাকে, তাহলে পুরোনো মানের সাথে +1 হবে।
-      return acc;
-    }, {});
+exports.countTasksByStatus = (req, res) => {
 
-    res.status(200).json({
-      message: "Tasks count by status and total tasks",
-      statusCounts,
-      totalTasks,
-    });
-  } catch (error) {
-    res
-      .status(500)
-      .json({
-        message: "Error counting tasks by status",
-        error: error.message,
-      });
-  }
+  let email = req.headers.email;
+  TaskModel.aggregate([
+    { $match: { email: email } },
+    {$group:{_id:"$status",sum:{$count:{}}}}
+  ], (err, data) => {
+    if(err){
+      console.error(err);
+      return res.status(500).json({ message: "Error getting tasks by status", error: err.message });
+    }
+    const totalTasks = data.reduce((acc, curr) => acc + curr.sum, 0);
+    res.status(200).json({ message: "Tasks by status", tasksByStatus: data, totalTasks: totalTasks });
+  })
+  
 };
