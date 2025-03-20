@@ -147,19 +147,44 @@ exports.getTaskByStatus = async (req, res) => {
 
 // Task count by status & total task
 
-exports.countTasksByStatus = (req, res) => {
+// exports.countTasksByStatus = (req, res) => {
 
-  let email = req.headers.email;
-  TaskModel.aggregate([
-    { $match: { email: email } },
-    {$group:{_id:"$status",sum:{$count:{}}}}
-  ], (err, data) => {
-    if(err){
-      console.error(err);
-      return res.status(500).json({ message: "Error getting tasks by status", error: err.message });
-    }
-    const totalTasks = data.reduce((acc, curr) => acc + curr.sum, 0);
-    res.status(200).json({ message: "Tasks by status", tasksByStatus: data, totalTasks: totalTasks });
-  })
-  
+//   let email = req.headers.email;
+//   TaskModel.aggregate([
+//     { $match: { email: email } },
+//     {$group:{_id:"$status",sum:{$count:{}}}}
+//   ], (err, data) => {
+//     if(err){
+//       console.error(err);
+//       return res.status(400).json({ message: "Error getting tasks by status", data: err});
+//     }
+
+//     res.status(200).json({ message: "Tasks by status", tasksByStatus: data, totalTasks: totalTasks });
+//   })
+
+// };
+exports.countTasksByStatus = async (req, res) => {
+  try {
+    let email = req.headers.email;
+
+    // Task Status অনুসারে Count করবে
+    const tasksByStatus = await TaskModel.aggregate([
+      { $match: { email: email } },
+      { $group: { _id: "$status", sum: { $sum: 1 } } }, // `$count:{}` পরিবর্তন করে `$sum:1` ব্যবহার করো
+    ]);
+
+    // **Total Task Count আনবে**
+    const totalTasks = await TaskModel.countDocuments({ email: email });
+
+    res.status(200).json({
+      message: "Tasks by status",
+      tasksByStatus: tasksByStatus,
+      totalTasks: totalTasks,
+    });
+  } catch (error) {
+    console.error("Error getting tasks by status:", error);
+    res
+      .status(500)
+      .json({ message: "Internal Server Error", error: error.message });
+  }
 };
