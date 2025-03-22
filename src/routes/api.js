@@ -23,7 +23,7 @@ const router = express.Router();
 router.post("/registration", registration);
 router.post("/login", login);
 router.post("/updateProfile", AuthVerifyMiddleware, updateProfile);
-router.post("/profileDetails", AuthVerifyMiddleware, profileDetails);
+router.get("/profileDetails", AuthVerifyMiddleware, profileDetails);
 // Define routes for task endpoints
 router.post("/createTask", AuthVerifyMiddleware, createTask);
 router.get("/getAllTasks", AuthVerifyMiddleware, getAllTasks);
