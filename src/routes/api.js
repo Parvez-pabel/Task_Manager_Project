@@ -3,6 +3,7 @@ const {
   registration,
   login,
   updateProfile,
+  profileDetails,
 } = require("../controllers/UserControllers");
 const AuthVerifyMiddleware = require("../middlewares/AuthVerifyMiddleware");
 const {
@@ -22,6 +23,7 @@ const router = express.Router();
 router.post("/registration", registration);
 router.post("/login", login);
 router.post("/updateProfile", AuthVerifyMiddleware, updateProfile);
+router.post("/profileDetails", AuthVerifyMiddleware, profileDetails);
 // Define routes for task endpoints
 router.post("/createTask", AuthVerifyMiddleware, createTask);
 router.get("/getAllTasks", AuthVerifyMiddleware, getAllTasks);

@@ -93,3 +93,34 @@ exports.updateProfile = async (req, res) => {
       .json({ message: "Error updating profile", error: error.message });
   }
 };
+
+//profile details
+
+exports.profileDetails = (req, res) => {
+  let email = req.headers["email"];
+  UserModel.aggregate(
+    [
+      { $match: { email: email } },
+      {
+        $project: {
+          _id: 0,
+          email: 1,
+          firstName: 1,
+          lastName: 1,
+          mobile: 1,
+          photo: 1,
+          password:1
+        },
+      },
+    ],
+    (err, data) => {
+      if ((err, data)) {
+        return res
+          .status(400)
+          .json({ message: "Error getting user profile", err: err.message });
+      } else {
+        return res.status(200).json({ message: "User profile", user: data });
+      }
+    }
+  );
+};
