@@ -96,10 +96,10 @@ exports.updateProfile = async (req, res) => {
 
 //profile details
 
-exports.profileDetails = (req, res) => {
-  let email = req.headers["email"];
-  UserModel.aggregate(
-    [
+exports.profileDetails = async (req, res) => {
+  try {
+    let email = req.headers["email"];
+    const data = await UserModel.aggregate([
       { $match: { email: email } },
       {
         $project: {
@@ -112,15 +112,15 @@ exports.profileDetails = (req, res) => {
           password: 1,
         },
       },
-    ],
-    (err, data) => {
-      if ((err, data)) {
-        return res
-          .status(400)
-          .json({ message: "Error getting user profile", err: err.message });
-      } else {
-        return res.status(200).json({ message: "User profile", user: data });
-      }
+    ]);
+
+    if (!data.length) {
+      return res.status(404).json({ message: "User not found" });
     }
-  );
+    return res.status(200).json({ message: "User profile", data });
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ message: "Error getting user profile", error: err.message });
+  }
 };
