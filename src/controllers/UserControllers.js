@@ -103,13 +103,13 @@ exports.profileDetails = (req, res) => {
       { $match: { email: email } },
       {
         $project: {
-          _id: 0,
+          _id: 1,
           email: 1,
           firstName: 1,
           lastName: 1,
           mobile: 1,
           photo: 1,
-          password:1
+          password: 1,
         },
       },
     ],
