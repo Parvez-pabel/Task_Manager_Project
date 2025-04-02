@@ -4,6 +4,7 @@ const {
   login,
   updateProfile,
   profileDetails,
+  verifyEmail,
 } = require("../controllers/UserControllers");
 const AuthVerifyMiddleware = require("../middlewares/AuthVerifyMiddleware");
 const {
@@ -36,5 +37,10 @@ router.get(
 );
 router.get("/getTaskByStatus/:status", AuthVerifyMiddleware, getTaskByStatus);
 router.get("/countTasksByStatus", AuthVerifyMiddleware, countTasksByStatus);
+
+//reset password api's
+router.get("/verifyEmail/:email", verifyEmail);
+router.get("/verifyOtp:email:otp");
+router.get("/RecoverResetPass");
 
 module.exports = router;

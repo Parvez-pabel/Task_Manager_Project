@@ -1,6 +1,8 @@
 //registration
 const jwt = require("jsonwebtoken");
 const UserModel = require("../models/UserModel");
+const OtpModel = require("../models/OtpModel");
+const SendEmailUtility = require("../utility/SendEmailUtility");
 
 exports.registration = async (req, res) => {
   try {
@@ -125,11 +127,42 @@ exports.profileDetails = async (req, res) => {
   }
 };
 
-
 //email verification for reset password
 
-exports.verifyEmail = async (req, res) => { 
-  //email query
-  //otp insert
-  //send mail
-}
+exports.verifyEmail = async (req, res) => {
+  let email = req.params.email;
+  let OtpCode = Math.floor(100000 + Math.random() * 900000);
+
+  try {
+    //email query
+    let UserCount = await UserModel.aggregate([
+      { $match: { email: email } },
+      { $count: "total" },
+    ]);
+    if (UserCount.length > 0) {
+      //otp insert
+      let CreateOtp = await OtpModel.create({
+        email: email,
+        otp: OtpCode,
+      });
+      //send mail
+      let SendEmail = await SendEmailUtility(
+        email,
+        "Your 6 digit codes are" + OtpCode,
+        "Task Manager Reset Password",
+        res.status(200).json({
+          message: "Verification email sent successfully",
+          otp: OtpCode,
+          data: SendEmail,
+        })
+      );
+    } else {
+      return res.status(404).json({ message: "User not found" });
+    }
+  } catch (error) {
+    console.error("Error verifying email:", error);
+    return res
+      .status(500)
+      .json({ message: "Error verifying email", error: error.message });
+  }
+};
