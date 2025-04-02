@@ -141,21 +141,21 @@ exports.verifyEmail = async (req, res) => {
     ]);
     if (UserCount.length > 0) {
       //otp insert
-      let CreateOtp = await OtpModel.create({
+      await OtpModel.create({
         email: email,
         otp: OtpCode,
       });
       //send mail
       let SendEmail = await SendEmailUtility(
         email,
-        "Your 6 digit codes are" + OtpCode,
-        "Task Manager Reset Password",
-        res.status(200).json({
-          message: "Verification email sent successfully",
-          otp: OtpCode,
-          data: SendEmail,
-        })
+        `Your 6-digit OTP code is: ${OtpCode}`,
+        "Task Manager Reset Password"
       );
+      res.status(200).json({
+        message: "Verification email sent successfully",
+        otp: OtpCode,
+        data: SendEmail,
+      });
     } else {
       return res.status(404).json({ message: "User not found" });
     }
