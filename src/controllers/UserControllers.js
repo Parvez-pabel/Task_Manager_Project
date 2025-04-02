@@ -124,3 +124,12 @@ exports.profileDetails = async (req, res) => {
       .json({ message: "Error getting user profile", error: err.message });
   }
 };
+
+
+//email verification for reset password
+
+exports.verifyEmail = async (req, res) => { 
+  //email query
+  //otp insert
+  //send mail
+}
