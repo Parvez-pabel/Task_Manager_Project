@@ -42,6 +42,6 @@ router.get("/countTasksByStatus", AuthVerifyMiddleware, countTasksByStatus);
 //reset password api's
 router.get("/verifyEmail/:email", verifyEmail);
 router.post("/verifyOtp/:email/:otp", verifyOtp);
-router.get("/RecoverResetPass");
+router.post("/RecoverResetPass");
 
 module.exports = router;

@@ -210,3 +210,42 @@ exports.verifyOtp = async (req, res) => {
       .json({ message: "Error verifying OTP", error: error.message });
   }
 };
+//reset password
+
+exports.createNewPass = async (req, res) => {
+  let email = req.params.email;
+  let otp = req.params.otp;
+  let newPass = req.params["Password"];
+  let UpdatedStatus = 1;
+
+  try {
+    let OtpUsedData = await OtpModel.aggregate([
+      {
+        $match: { email: email, otp: otp, status: UpdatedStatus },
+      },
+      { $count: "total" },
+    ]);
+
+    if (OtpUsedData.length > 0) {
+      let resetPass = await OtpModel.updateOne(
+        {
+          email: email,
+        },
+        {
+          password: newPass,
+        }
+      );
+
+      return res
+        .status(200)
+        .json({ message: "Reset Password successfully", data: resetPass });
+    } else {
+      res.status(404).json({ message: "Invalid OTP" });
+    }
+  } catch (error) {
+    console.error("Error verifying OTP:", error);
+    return res
+      .status(500)
+      .json({ message: "Error verifying OTP", error: error.message });
+  }
+};
