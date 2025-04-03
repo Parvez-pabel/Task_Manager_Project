@@ -166,3 +166,45 @@ exports.verifyEmail = async (req, res) => {
       .json({ message: "Error verifying email", error: error.message });
   }
 };
+
+// OTP verification for reset password
+
+exports.verifyOtp = async (req, res) => {
+  let email = req.params.email;
+  let otp = req.params.otp;
+  let status = 0;
+  let UpdatedStatus = 1;
+
+  try {
+    let OtpData = await OtpModel.aggregate([
+      {
+        $match: { email: email, otp: otp, status: status },
+      },
+      { $count: "total" },
+    ]);
+
+    if (otp.length > 0) {
+      let otpUpdate = await OtpModel.updateOne(
+        {
+          email: email,
+          otp: otp,
+          status: status,
+        },
+        {
+          email: email,
+          otp: otp,
+          status: UpdatedStatus,
+        }
+      );
+
+      return res.status(200).json({ message: "OTP verified successfully" });
+    } else {
+      res.status(404).json({ message: "Invalid OTP" });
+    }
+  } catch (error) {
+    console.error("Error verifying OTP:", error);
+    return res
+      .status(500)
+      .json({ message: "Error verifying OTP", error: error.message });
+  }
+};
