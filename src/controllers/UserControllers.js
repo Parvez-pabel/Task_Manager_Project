@@ -152,7 +152,7 @@ exports.verifyEmail = async (req, res) => {
         "Task Manager Reset Password"
       );
       res.status(200).json({
-        message: "Verification email sent successfully",
+        status: "Success",
         otp: OtpCode,
         data: SendEmail,
       });
