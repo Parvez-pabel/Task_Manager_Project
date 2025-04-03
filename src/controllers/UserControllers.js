@@ -215,7 +215,7 @@ exports.verifyOtp = async (req, res) => {
 exports.createNewPass = async (req, res) => {
   let email = req.params.email;
   let otp = req.params.otp;
-  let newPass = req.params["Password"];
+  let newPass = req.params["password"];
   let UpdatedStatus = 1;
 
   try {
