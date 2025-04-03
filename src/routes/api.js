@@ -6,6 +6,7 @@ const {
   profileDetails,
   verifyEmail,
   verifyOtp,
+  createNewPass,
 } = require("../controllers/UserControllers");
 const AuthVerifyMiddleware = require("../middlewares/AuthVerifyMiddleware");
 const {
@@ -42,6 +43,6 @@ router.get("/countTasksByStatus", AuthVerifyMiddleware, countTasksByStatus);
 //reset password api's
 router.get("/verifyEmail/:email", verifyEmail);
 router.post("/verifyOtp/:email/:otp", verifyOtp);
-router.post("/RecoverResetPass");
+router.post("/RecoverResetPass", createNewPass);
 
 module.exports = router;
