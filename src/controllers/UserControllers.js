@@ -227,7 +227,7 @@ exports.createNewPass = async (req, res) => {
     ]);
 
     if (OtpUsedData.length > 0) {
-      let resetPass = await OtpModel.updateOne(
+      let resetPass = await UserModel.updateOne(
         {
           email: email,
         },
@@ -241,7 +241,9 @@ exports.createNewPass = async (req, res) => {
           .status(200)
           .json({ message: "Reset Password successfully", data: resetPass });
       } else {
-        return res.status(400).json({ message: "Password reset failed",data: resetPass });
+        return res
+          .status(400)
+          .json({ message: "Password reset failed", data: resetPass });
       }
     } else {
       res.status(404).json({ message: "Invalid OTP" });
