@@ -216,7 +216,6 @@ exports.createNewPass = async (req, res) => {
   let email = req.body.email;
   let otp = req.body.otp;
   let newPass = req.body.password;
-  console.log(newPass);
   let UpdatedStatus = 1;
 
   try {
@@ -238,9 +237,11 @@ exports.createNewPass = async (req, res) => {
       );
 
       if (resetPass.modifiedCount > 0) {
-        return res.status(200).json({ message: "Reset Password successfully" });
+        return res
+          .status(200)
+          .json({ message: "Reset Password successfully", data: resetPass });
       } else {
-        return res.status(400).json({ message: "Password reset failed" });
+        return res.status(400).json({ message: "Password reset failed",data: resetPass });
       }
     } else {
       res.status(404).json({ message: "Invalid OTP" });
