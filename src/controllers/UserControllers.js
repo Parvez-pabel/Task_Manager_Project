@@ -213,9 +213,9 @@ exports.verifyOtp = async (req, res) => {
 //reset password
 
 exports.createNewPass = async (req, res) => {
-  let email = req.params.email;
-  let otp = req.params.otp;
-  let newPass = req.params.password;
+  let email = req.body.email;
+  let otp = req.body.otp;
+  let newPass = req.body.password;
   console.log(newPass);
   let UpdatedStatus = 1;
 
