@@ -237,13 +237,16 @@ exports.createNewPass = async (req, res) => {
       );
 
       if (resetPass.modifiedCount > 0) {
-        return res
-          .status(200)
-          .json({ message: "Reset Password successfully", data: resetPass });
+        return res.status(200).json({
+          status: "success",
+          message: "Reset Password successfully",
+          data: resetPass,
+        });
       } else {
-        return res
-          .status(400)
-          .json({ message: "Password reset failed", data: resetPass });
+        return res.status(400).json({
+          status: "fail",
+          data: "Invalid OTP",
+        });
       }
     } else {
       res.status(404).json({ message: "Invalid OTP" });
